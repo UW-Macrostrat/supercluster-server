@@ -1,0 +1,20 @@
+{
+  "name": "supercluster-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "geojson-vt": "^2.4.0",
+    "mapnik": "^3.6.2",
+    "pg": "^7.3.0",
+    "sphericalmercator": "^1.0.5",
+    "supercluster": "^3.0.1",
+    "vt-pbf": "^3.1.0"
+  }
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+        #zoom { position: absolute; z-index: 99999; padding: 10px; background-color: #fff; }
+    </style>
+</head>
+<body>
+<div id="zoom"></div>
+<div id='map'></div>
+<script>
+let layers = [{
+    id: 'cluster-0',
+    type: 'circle',
+    source: 'clusters',
+    'source-layer': 'clusters',
+    paint: {
+      'circle-color': '#08519c',
+      'circle-radius': 18
+    },
+    filter: ['>=', 'point_count', 500]
+  }, {
+    id: 'cluster-1',
+    type: 'circle',
+    source: 'clusters',
+    'source-layer': 'clusters',
+    paint: {
+      'circle-color': '#3182bd',
+      'circle-radius': 18
+    },
+    filter: ['all',
+      ['>=', 'point_count', 200],
+      ['<', 'point_count', 500]
+    ]
+  }, {
+    id: 'cluster-2',
+    type: 'circle',
+    source: 'clusters',
+    'source-layer': 'clusters',
+    paint: {
+      'circle-color': '#6baed6',
+      'circle-radius': 18
+    },
+    filter: ['all',
+      ['>=', 'point_count', 100],
+      ['<', 'point_count', 200]
+    ]
+  }, {
+    id: 'cluster-3',
+    type: 'circle',
+    source: 'clusters',
+    'source-layer': 'clusters',
+    paint: {
+      'circle-color': '#bdd7e7',
+      'circle-radius': 18
+    },
+    filter: ['all',
+      ['>=', 'point_count', 20],
+      ['<', 'point_count', 100]
+    ]
+  }, {
+    id: 'cluster-4',
+    type: 'circle',
+    source: 'clusters',
+    'source-layer': 'clusters',
+    paint: {
+      'circle-color': '#eff3ff',
+      'circle-radius': 18
+    },
+    filter: ['all',
+      ['>=', 'point_count', 0],
+      ['<', 'point_count', 20]
+    ]
+  }, {
+    id: 'cluster-count',
+    type: 'symbol',
+    source: 'clusters',
+    'source-layer': 'clusters',
+    layout: {
+      'text-field': '{point_count}',
+      'text-font': [
+        'DIN Offc Pro Medium',
+        'Arial Unicode MS Bold'
+      ],
+      'text-size': 12
+    }
+  }]
+mapboxgl.accessToken = 'pk.eyJ1IjoiamN6YXBsZXdza2kiLCJhIjoiWnQxSC01USJ9.oleZzfREJUKAK1TMeCD0bg';
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/jczaplewski/cj3bpe4xk00002rqndidf9dw4?optimize=true',
+    center: [-106, 51],
+    zoom: 3
+})
+map.on('zoom', (e) => {
+  document.querySelector('#zoom').innerHTML = map.getZoom().toFixed(2)
+})
+map.on('load', () => {
+  this.map.addSource('clusters', {
+    "type": "vector",
+    "tiles": ["http://localhost:3000/{z}/{x}/{y}"],
+    "tileSize": 512
+  })
+  map.addLayer({
+      id: "unclustered-point",
+      type: "symbol",
+      source: "clusters",
+      "source-layer": "clusters",
+      filter: ["!has", "point_count"],
+      layout: {
+        'icon-size': 0.045,
+        'icon-image': 'pin',
+        'icon-offset': [0, -150]
+      }
+  });
+  layers.forEach(layer => {
+    this.map.addLayer(layer)
+  })
+  // this.map.addLayer({
+  //   "id": "cluster-layer",
+  //   "type": "circle",
+  //   "source": "clusters",
+  //   "source-layer": "clusters",
+  //   "paint": {
+  //     'circle-color': '#08519c',
+  //     'circle-radius': {
+  //       'property': 'point_count',
+  //       'stops': [
+  //         [0, 20],
+  //         [10, 30],
+  //         [40, 40],
+  //         [60, 50],
+  //         [90, 100]
+  //       ]
+  //     }
+  //   }
+  // })
+})
+</script>
+
+</body>
+</html>
